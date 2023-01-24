@@ -6,7 +6,8 @@ const momForm = document.getElementById("momForm");
 const spinner = document.getElementById("spinner");
 const btn = document.getElementById("btn");
 const main = document.getElementById("main");
-const BASEURL = "https://jinytree.shop"
+// const BASEURL = "http://localhost:4000";
+const BASEURL = "https://jinytree.shop";
 // const ko = /([^가-힣\x20])/i;
 // const int = /[^0-9]/g;
 // const en = /[^a-z]/g;
@@ -82,10 +83,3 @@ form.addEventListener("submit", async (e) => {
   section.classList = "";
 });
 // list.addEventListener("submit", () => {});
-
-albumPost: string;
-albumName: string;
-created: string;
-type: string;
-artist: string;
-title: string;

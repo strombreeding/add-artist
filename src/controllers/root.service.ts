@@ -50,7 +50,9 @@ export const searchSongInfo = async (id: string) => {
 export const getPages = async (artist: string) => {
   let resultData = [];
   let pageArr = [1];
-  const html = await puppeteer.launch();
+  const html = await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   const page = await html.newPage();
   await page.goto(
     `https://www.melon.com/search/song/index.htm?q=${artist}&section=artist&searchGnbYn=Y&kkoSpl=N&kkoDpType=`
@@ -75,7 +77,9 @@ export const croll = async (artist: string) => {
   let resultData = [];
   for (let i = 0; i < pageArr.length; i++) {
     console.log(i + 1, "번째");
-    const html = await puppeteer.launch();
+    const html = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
     const page = await html.newPage();
     await page.goto(
       `https://www.melon.com/search/song/index.htm?q=${artist}&section=artist&searchGnbYn=Y&kkoSpl=N&kkoDpType=#params[q]=${artist}&params[sort]=date&params[section]=artist&params[sectionId]=&params[genreDir]=&params[mwkLogType]=T&po=pageObj&startIndex=${pageArr[i]}`
