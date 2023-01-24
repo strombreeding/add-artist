@@ -6,6 +6,7 @@ const momForm = document.getElementById("momForm");
 const spinner = document.getElementById("spinner");
 const btn = document.getElementById("btn");
 const main = document.getElementById("main");
+const BASEURL = "https://jinytree.shop"
 // const ko = /([^가-힣\x20])/i;
 // const int = /[^0-9]/g;
 // const en = /[^a-z]/g;
@@ -31,7 +32,7 @@ form.addEventListener("submit", async (e) => {
     artist,
   };
   console.log(data);
-  const response = await fetch(`http://localhost:4000/artist`, {
+  const response = await fetch(`${BASEURL}/artist`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
