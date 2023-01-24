@@ -51,6 +51,7 @@ export const getPages = async (artist: string) => {
   let resultData = [];
   let pageArr = [1];
   const html = await puppeteer.launch({
+    headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await html.newPage();
@@ -78,6 +79,7 @@ export const croll = async (artist: string) => {
   for (let i = 0; i < pageArr.length; i++) {
     console.log(i + 1, "번째");
     const html = await puppeteer.launch({
+      headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await html.newPage();
