@@ -1,9 +1,10 @@
 import express, { Request, Response, NextFunction } from "express";
 import { root } from "./routers";
-
+import cors from "cors";
 const app = express();
 
 //view engine setting
+app.use(cors());
 app.set("view engine", "pug");
 app.set("views", __dirname + "./src");
 app.use(express.urlencoded({ extended: true }));
