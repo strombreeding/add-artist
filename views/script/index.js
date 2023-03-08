@@ -7,7 +7,6 @@ const spinner = document.getElementById("spinner");
 const btn = document.getElementById("btn");
 const main = document.getElementById("main");
 const BASEURL = "http://localhost:4000";
-let DB_URL = `${process.env.DB_URL}` | "";
 
 if (sessionStorage.getItem(confirm) === 1) {
 }
