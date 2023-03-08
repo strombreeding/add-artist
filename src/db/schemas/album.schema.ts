@@ -8,7 +8,11 @@ const songSchema = new Schema({
       title: String,
       albumName: String,
       albumImgUrl: String,
-      since: Number,
+      since: {
+        year: Number,
+        month: Number,
+        date: Number,
+      },
     },
   ],
   createdAt: { type: Date, default: Date.now },

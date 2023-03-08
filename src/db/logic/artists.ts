@@ -14,8 +14,9 @@ export const addOrUpdateArtist = async (createData: createArtistInfo, songInfo?:
     return newArtist;
   }
   const newArtist = await Artist.findOne({ artistName: createData.artistName });
+  console.log("들어가나?", songInfo);
   if (songInfo) {
-    newArtist.albumList.push();
+    newArtist.albumList.push(songInfo);
     await Artist.findByIdAndUpdate(newArtist.id, { $set: { ...newArtist } });
   }
 

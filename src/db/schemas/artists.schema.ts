@@ -6,7 +6,7 @@ const artistSchema = new Schema({
   duckPoint: { type: Number, default: 0 },
   usedCount: { type: Number, default: 0 },
   donationMsg: [{ type: Schema.Types.ObjectId, ref: "donations" }],
-  albumList: [{ type: Schema.Types.ObjectId, ref: "Album" }],
+  albumList: [{ type: Schema.Types.ObjectId, ref: "Song" }],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

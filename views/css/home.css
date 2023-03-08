@@ -28,7 +28,11 @@ section {
   align-items: center;
   justify-content: center;
 }
-
+[name="spinner"] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 section form {
   width: 100%;
   display: flex;

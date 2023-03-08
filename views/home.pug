@@ -20,9 +20,11 @@ html(lang="en")
                 form#form
                     input(type="text",placeholder="아티스트 이름")#artist
                     input(type="submit",value="찾기")
-                div#spinner.hidden 
-                    div(class="spinner-border text-light", role="status")
-                        span(class="visually-hidden") Loading...
+                div#spinner.hidden
+                    div(name="spinner")
+                        div(class="spinner-border text-light", role="status")
+                            span(class="visually-hidden") Loading...
+                        p 검색에는 30초 ~ 수 분 걸릴 수 있습니다. 
                 br
                 br
             section#list.hidden 

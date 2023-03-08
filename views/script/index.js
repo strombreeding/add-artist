@@ -22,7 +22,7 @@ form.addEventListener("submit", async (e) => {
   section.classList = "hidden";
   const nowTime = Date.now();
   const cooldown = Number(localStorage.getItem("cooldown"));
-  if (nowTime - cooldown < 240000) {
+  if (nowTime < cooldown) {
     alert(`이전 요청 후 4분이 지나지 않았습니다.
     차단 방지를 위해 쉬어주세요!
     남은 시간 : ${Math.round((cooldown - nowTime) / 1000)}초
@@ -82,7 +82,7 @@ form.addEventListener("submit", async (e) => {
     if (windowWidth < 701) {
       div.innerHTML = `
                 <div>
-                    <img src="${res.songList[i].albumPost}" alt="" />
+                    <img src="${res.songList[i].albumImgUrl}" alt="" />
                     <span> :</span>
                     <span> : ${res.songList[i].title} :</span><br>
                     <span> : ${res.songList[i].albumName} :</span><br>
@@ -91,11 +91,11 @@ form.addEventListener("submit", async (e) => {
     } else {
       div.innerHTML = `
                 <div>
-                    <img src="${res.songList[i].albumPost}" alt="" /><br>
+                    <img src="${res.songList[i].albumImgUrl}" alt="" /><br>
                     <span>  ${res.songList[i].title} :</span><br>
                     <span> : ${res.songList[i].albumName} :</span><br>
                     <span> : ${res.songList[i].artist} :</span><br>
-                    <span> : ${res.songList[i].created} :</span><br>
+                    <span> : ${res.songList[i].since.year}.${res.songList[i].since.month} :</span><br>
                     <span> : ${res.songList[i].type} :</span><br>
                 </div>
             `;

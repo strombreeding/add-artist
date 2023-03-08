@@ -31,9 +31,13 @@ export const getArtistInfo = async (artist: string) => {
 
 export const searchSongInfo = async (id: string) => {
   const result = {
-    albumPost: "",
     albumImgUrl: "",
-    since: "",
+    albumName: "",
+    since: {
+      year: 0,
+      month: 0,
+      date: 0,
+    },
     type: "",
     artist: "",
   };
@@ -46,11 +50,16 @@ export const searchSongInfo = async (id: string) => {
   const $ = cheerio.load(html.data);
   const gogo = $("div.wrap_info");
   const typeAndCreated = $("dl.list").children().next().next().next().text().split("장르");
-
+  const sinceMaker = typeAndCreated[0].split(".");
+  const since = {
+    year: Number(sinceMaker[0]),
+    month: Number(sinceMaker[1]),
+    date: Number(sinceMaker[2]),
+  };
   gogo.map((i, element) => {
-    result.albumPost = $(element).find("div.thumb a img").attr("src");
-    result.albumImgUrl = $(element).find("div.entry div.meta dl.list dd a").text();
-    result.since = typeAndCreated[0];
+    result.albumImgUrl = $(element).find("div.thumb a img").attr("src");
+    result.albumName = $(element).find("div.entry div.meta dl.list dd a").text();
+    result.since = since;
     result.type = typeAndCreated[1].split("FLAC")[0];
     result.artist = $("div.artist a").attr("title");
   });

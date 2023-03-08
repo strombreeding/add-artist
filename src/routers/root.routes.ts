@@ -3,6 +3,7 @@ import { addOrUpdateArtist } from "../db/logic/artists";
 import { addOrUpdateSongs } from "../db/logic/songs";
 
 import * as rootService from "../controllers/root.service";
+import { Artist } from "../db/schemas/artists.schema";
 
 export const root = express();
 
@@ -39,6 +40,8 @@ root.post("/db", async (req, res, next) => {
   try {
     const workArtist = await addOrUpdateArtist(createArtistInfo);
     const workAlbum = await addOrUpdateSongs(songList, workArtist.id);
+    console.log(workAlbum);
+    const artistUpdate = await addOrUpdateArtist(createArtistInfo, workAlbum._id);
     return res.status(201).json({
       workArtist,
       workAlbum,
@@ -46,4 +49,10 @@ root.post("/db", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+root.get("/test", async (req, res, next) => {
+  const id = String(req.query.id);
+  const test = await Artist.findById(id).populate("albumList");
+  return res.send(test);
 });
