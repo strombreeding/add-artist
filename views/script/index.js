@@ -31,7 +31,7 @@ form.addEventListener("submit", async (e) => {
     throw new Error("잠시후 시도해주세요");
   }
   // 4분제한
-  // localStorage.setItem("cooldown", String(Date.now() + 240000));
+  localStorage.setItem("cooldown", String(Date.now() + 240000));
   const artist = document.getElementById("artist").value;
   e.preventDefault();
   momForm.replaceChildren();
