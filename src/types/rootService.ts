@@ -1,6 +1,7 @@
 export type originSongInfo = {
   index: number;
   id: string;
+  title: string;
 };
 
 export type finalSongInfo = {

@@ -1,6 +1,10 @@
 .hidden {
   display: none;
 }
+.artist_img {
+  width: 208px;
+  height: 208px;
+}
 #body {
   display: flex;
   flex-direction: column;

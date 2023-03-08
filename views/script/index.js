@@ -6,8 +6,8 @@ const momForm = document.getElementById("momForm");
 const spinner = document.getElementById("spinner");
 const btn = document.getElementById("btn");
 const main = document.getElementById("main");
-// const BASEURL = "http://localhost:4000";
-const BASEURL = "https://jinytree.shop";
+const BASEURL = "http://localhost:4000";
+// const BASEURL = "https://jinytree.shop";
 // const ko = /([^가-힣\x20])/i;
 // const int = /[^0-9]/g;
 // const en = /[^a-z]/g;
@@ -25,10 +25,22 @@ btn.addEventListener("click", () => {
 form.addEventListener("submit", async (e) => {
   spinner.classList = "";
   section.classList = "hidden";
-
+  const nowTime = Date.now();
+  const cooldown = Number(localStorage.getItem("cooldown"));
+  if (nowTime - cooldown < 240000) {
+    alert(`이전 요청 후 4분이 지나지 않았습니다.
+    차단 방지를 위해 쉬어주세요!
+    남은 시간 : ${Math.round((cooldown - nowTime) / 1000)}초
+    `);
+    throw new Error("잠시후 시도해주세요");
+  }
+  localStorage.setItem("cooldown", String(Date.now() + 240000));
   const artist = document.getElementById("artist").value;
   e.preventDefault();
   momForm.replaceChildren();
+  while (momForm.hasChildNodes()) {
+    momForm.removeChild();
+  }
   const data = {
     artist,
   };
@@ -40,14 +52,21 @@ form.addEventListener("submit", async (e) => {
     },
     body: JSON.stringify(data),
   });
+
   const res = await response.json();
   console.log(res);
   spinner.classList = "hidden";
   // db에 저장하는버튼. 해당버튼 클릭시 res.songList 를 다주고 DB에 넣어야하므로 굉장히 빡센 작업임
   const submitInput = document.createElement("input");
+  const artistInfoDiv = document.createElement("div");
+  const artistInfoDivImg = document.createElement("img");
+  artistInfoDivImg.src = res.artistInfo;
+  artistInfoDiv.appendChild(artistInfoDivImg);
+  artistInfoDivImg.classList = "artist_img";
   submitInput.type = "submit";
   submitInput.value = "덱 등록";
   momForm.appendChild(submitInput);
+  momForm.appendChild(artistInfoDiv);
 
   const momUl = document.createElement("ul");
   const h2 = document.createElement("h2");
@@ -83,3 +102,4 @@ form.addEventListener("submit", async (e) => {
   section.classList = "";
 });
 // list.addEventListener("submit", () => {});
+function killChildNodes() {}
