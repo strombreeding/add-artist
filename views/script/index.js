@@ -7,12 +7,8 @@ const spinner = document.getElementById("spinner");
 const btn = document.getElementById("btn");
 const main = document.getElementById("main");
 const BASEURL = "http://localhost:4000";
-// const BASEURL = "https://jinytree.shop";
-// const ko = /([^가-힣\x20])/i;
-// const int = /[^0-9]/g;
-// const en = /[^a-z]/g;
-// const regex = new RegExp(/([^가-힣\x20])/i);
-// artist.addEventListener("submit", () => {});
+let DB_URL = `${process.env.DB_URL}` | "";
+
 if (sessionStorage.getItem(confirm) === 1) {
 }
 btn.addEventListener("click", () => {
@@ -34,7 +30,8 @@ form.addEventListener("submit", async (e) => {
     `);
     throw new Error("잠시후 시도해주세요");
   }
-  localStorage.setItem("cooldown", String(Date.now() + 240000));
+  // 4분제한
+  // localStorage.setItem("cooldown", String(Date.now() + 240000));
   const artist = document.getElementById("artist").value;
   e.preventDefault();
   momForm.replaceChildren();
@@ -55,6 +52,7 @@ form.addEventListener("submit", async (e) => {
 
   const res = await response.json();
   console.log(res);
+
   spinner.classList = "hidden";
   // db에 저장하는버튼. 해당버튼 클릭시 res.songList 를 다주고 DB에 넣어야하므로 굉장히 빡센 작업임
   const submitInput = document.createElement("input");
@@ -65,6 +63,14 @@ form.addEventListener("submit", async (e) => {
   artistInfoDivImg.classList = "artist_img";
   submitInput.type = "submit";
   submitInput.value = "덱 등록";
+  const addDeckData = {
+    songList: res.songList,
+    artistName: artist,
+    artistImgUrl: res.artistInfo,
+  };
+  submitInput.addEventListener("click", async () => {
+    sendData(addDeckData);
+  });
   momForm.appendChild(submitInput);
   momForm.appendChild(artistInfoDiv);
 
@@ -102,4 +108,14 @@ form.addEventListener("submit", async (e) => {
   section.classList = "";
 });
 // list.addEventListener("submit", () => {});
-function killChildNodes() {}
+async function sendData(data) {
+  const response = await fetch(`${BASEURL}/db`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const res = await response.json();
+  console.log(res);
+}

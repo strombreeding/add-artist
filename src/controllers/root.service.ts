@@ -2,12 +2,15 @@ import axios from "axios";
 import cheerio from "cheerio";
 import puppeteer from "puppeteer";
 import { originSongInfo } from "../types/rootService";
+import { Artist } from "../db/schemas/artists.schema";
 
 export const getSongList = async (artist: string) => {
   const pageArr = await getPages(artist);
+  console.log(pageArr);
   const arr = await croll(artist, pageArr);
   const result = clusterWorker(pageArr, arr);
   return result;
+  return { zz: "gd" };
 };
 export const getArtistInfo = async (artist: string) => {
   const html = await axios.get(
@@ -29,8 +32,8 @@ export const getArtistInfo = async (artist: string) => {
 export const searchSongInfo = async (id: string) => {
   const result = {
     albumPost: "",
-    albumName: "",
-    created: "",
+    albumImgUrl: "",
+    since: "",
     type: "",
     artist: "",
   };
@@ -46,28 +49,31 @@ export const searchSongInfo = async (id: string) => {
 
   gogo.map((i, element) => {
     result.albumPost = $(element).find("div.thumb a img").attr("src");
-    result.albumName = $(element).find("div.entry div.meta dl.list dd a").text();
-    result.created = typeAndCreated[0];
+    result.albumImgUrl = $(element).find("div.entry div.meta dl.list dd a").text();
+    result.since = typeAndCreated[0];
     result.type = typeAndCreated[1].split("FLAC")[0];
     result.artist = $("div.artist a").attr("title");
   });
   return result;
 };
 export const getPages = async (artist: string) => {
-  let resultData = [];
-  let pageArr = [1];
+  const pageArr = [1];
   const html = await puppeteer.launch({});
   const page = await html.newPage();
   await page.goto(
     `https://www.melon.com/search/song/index.htm?q=${encodeURIComponent(
       artist
-    )}&section=artist&searchGnbYn=Y&kkoSpl=N&kkoDpType=#params%5Bq%5D=%25EC%2595%2584%25EC%259D%25B4%25EC%259C%25A0&params%5Bsort%5D=date&params%5Bsection%5D=artist&params%5BsectionId%5D=&params%5BgenreDir%5D=&params%5BmwkLogType%5D=T&po=pageObj&startIndex=1`
+    )}&section=artist&searchGnbYn=Y&kkoSpl=N&kkoDpType=#params%5Bq%5D=${encodeURIComponent(
+      artist
+    )}&params%5Bsort%5D=date&params%5Bsection%5D=artist&params%5BsectionId%5D=&params%5BgenreDir%5D=&params%5BmwkLogType%5D=T&po=pageObj&startIndex=1`,
+    { waitUntil: "load" }
   );
   const contnet = await page.content();
   const $ = cheerio.load(contnet, { decodeEntities: true });
   const pageNum = $("span.page_num");
   pageNum.map((i, element) => {
     const pageText = $(element).find("a").text();
+    console.log(pageText);
     for (let i = 0; i < pageText.length; i++) {
       if (i > 4) break;
       pageArr.push(Number(pageArr[i] + 50));
@@ -98,16 +104,22 @@ export const croll = async (artist: string, pageArr: number[]) => {
     const $ = cheerio.load(contnet, { decodeEntities: true });
     const res = $("input.input_check");
     const emptyArr = [];
+    const duplicationTitles = [`(Inst.)`, `Ver.`];
     res.map((i, element) => {
       const length = emptyArr.length + resultData.length + 1;
       const id = String($(element).val());
       const title = $(element).attr("title").replace(" 곡 선택", "");
+      // 같은 타이틀 중복 방지
+      if (title.includes(duplicationTitles[0]) || title.includes(duplicationTitles[1])) {
+        return;
+      }
       if (id !== "on") {
         emptyArr.push({
           index: length,
           id,
           title,
         });
+        duplicationTitles.push(title);
       }
     });
     resultData.push(...emptyArr);

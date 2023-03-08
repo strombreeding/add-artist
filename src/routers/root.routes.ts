@@ -1,4 +1,6 @@
 import express from "express";
+import { addOrUpdateArtist } from "../db/logic/artists";
+import { addOrUpdateSongs } from "../db/logic/songs";
 
 import * as rootService from "../controllers/root.service";
 
@@ -22,6 +24,24 @@ root.post("/artist", async (req, res, next) => {
     return res.status(200).json({
       songList,
       artistInfo,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+root.post("/db", async (req, res, next) => {
+  const { songList, artistName, artistImgUrl } = req.body;
+  const createArtistInfo = {
+    artistName,
+    artistImgUrl,
+  };
+  try {
+    const workArtist = await addOrUpdateArtist(createArtistInfo);
+    const workAlbum = await addOrUpdateSongs(songList, workArtist.id);
+    return res.status(201).json({
+      workArtist,
+      workAlbum,
     });
   } catch (err) {
     next(err);
